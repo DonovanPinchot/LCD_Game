@@ -6,9 +6,9 @@
 #include "NHD_0216HZ.h"
 
 
-#define SPI_MOSI D11
+//#define SPI_MOSI D11
 #define SPI_SCLK D13
-#define SPI_CS D10
+//#define SPI_CS D10
 
 DigitalOut SS(SPI_CS);     //slave select a.k.a. cs or latch for shift reg
 SPI spi(SPI_MOSI, NC, SPI_SCLK);
@@ -28,24 +28,24 @@ void init_lcd(void) {
 	from the ST7066U LCD driver datasheet (pages 25-26)
 	*/
 	//Write your code here
-    ThisThread::sleep_for(50);
+    ThisThread::sleep_for(50ms);
 
     write_cmd(0x30);
-    ThisThread::sleep_for(1);
+    ThisThread::sleep_for(1ms);
 
     write_cmd(0x20);
-    ThisThread::sleep_for(1);
+    ThisThread::sleep_for(1ms);
     write_cmd(0x20);
-    ThisThread::sleep_for(1);
+    ThisThread::sleep_for(1ms);
     
     write_cmd(0x0C);
-    ThisThread::sleep_for(1);
+    ThisThread::sleep_for(1ms);
 
     write_cmd(0x01);
-    ThisThread::sleep_for(2);
+    ThisThread::sleep_for(2ms);
 
     write_cmd(0x06);
-    ThisThread::sleep_for(1);
+    ThisThread::sleep_for(1ms);
 }
 
 //Write 4bits to the LCD

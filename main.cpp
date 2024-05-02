@@ -129,7 +129,7 @@ int main() {
             user_y++;
         }
 
-        ThisThread::sleep_for(1);
+        ThisThread::sleep_for(1ms);
 
 
     }
