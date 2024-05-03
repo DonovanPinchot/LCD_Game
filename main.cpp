@@ -1,3 +1,4 @@
+
 #include "mbed.h"
 #include "NHD_0216HZ.h"
 #include <cstdlib>
@@ -31,6 +32,7 @@ bool down_pressed = false;
     int user_x = 1;
     int user_y = 0;
     bool end_game = false;
+    int swap_side_obj = 0;
 
 
 
@@ -186,7 +188,7 @@ int main() {
         }
 
 
-        if(obj_x != left_bound && !left_pressed && !right_pressed && !up_pressed && !down_pressed){
+        if(obj_x != left_bound && !left_pressed && !right_pressed && !up_pressed && !down_pressed && swap_side_obj == 1){
             set_cursor((obj_x - 1),obj_y);
             print_lcd(erase);
             set_cursor((obj_x - 2), obj_y);
@@ -196,16 +198,53 @@ int main() {
             set_cursor(obj_x, obj_y);
 
         }
-        else if(!left_pressed && !right_pressed && !up_pressed && !down_pressed){
+        else if(!left_pressed && !right_pressed && !up_pressed && !down_pressed && swap_side_obj == 1){
             set_cursor((obj_x - 1), obj_y);
             print_lcd(erase);
-            obj_y = random_num;
-            set_cursor(right_bound,obj_y);
-            print_lcd(fourth_string);
-            obj_x = right_bound;
-            set_cursor(obj_x, obj_y);
-            ThisThread::sleep_for(random_speed);
 
+
+
+
+            obj_y = random_num;
+            swap_side_obj = rand() % 2; 
+            if(swap_side_obj == 1){
+                set_cursor(right_bound,obj_y);
+                print_lcd(fourth_string);
+                obj_x = right_bound;
+                set_cursor(obj_x, obj_y);
+                ThisThread::sleep_for(random_speed);
+            }
+        }
+
+
+
+    
+        if(obj_x != right_bound && !left_pressed && !right_pressed && !up_pressed && !down_pressed && swap_side_obj == 0){
+            set_cursor((obj_x - 1),obj_y);
+            print_lcd(erase);
+            set_cursor(obj_x, obj_y);
+            print_lcd(fourth_string);
+            obj_x++;
+
+            set_cursor(obj_x, obj_y);
+
+        }
+        else if(!left_pressed && !right_pressed && !up_pressed && !down_pressed && swap_side_obj == 0){
+            set_cursor((obj_x - 1), obj_y);
+            print_lcd(erase);
+
+
+
+
+            obj_y = random_num;
+            swap_side_obj = rand() % 2; 
+            if(swap_side_obj == 0){
+                set_cursor(left_bound,obj_y);
+                print_lcd(fourth_string);
+                obj_x = left_bound;
+                set_cursor(obj_x, obj_y);
+                ThisThread::sleep_for(random_speed);
+            }
         }
 
         ThisThread::sleep_for(50ms);
