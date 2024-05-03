@@ -28,9 +28,13 @@ bool down_pressed = false;
     const char *second_string = "World";
     const char *third_string = "O";
     const char *fourth_string = "W";
+    const char *fifth_string = "Score:";
     const char *coin = "o";
-    const char *game_over = "   Game Over  ";
+    const char *game_over = "Game Over  Up To";
     const char *start_again = "Up to Reset";
+    const char *start_screen = "    Press Up    ";
+    const char *start_screen2 = "    To Start    ";   
+    const char *sixth_string = "Reset";
     const char *erase = " ";
     const int left_bound = 1;
     const int right_bound = 16;
@@ -93,7 +97,12 @@ void reset_loop(){
     set_cursor(0, 0);
     print_lcd(game_over);
     set_cursor(0, 1);
+    print_lcd(fifth_string);
+
+    set_cursor(8, 1);
     print_lcd(buffer);
+    set_cursor(11, 1);
+    print_lcd(sixth_string);
     obj_x = right_bound;
     obj_y = 1;
 
@@ -143,13 +152,25 @@ int main() {
     init_spi();
     init_lcd();
     init_lcd();
-    set_cursor(7, 0);
-    print_lcd(third_string);
+
     right.rise(&right_ISR);
     left.rise(&left_ISR);
     up.rise(&up_ISR);
     down.rise(&down_ISR);
 
+    set_cursor(0, 0);
+    print_lcd(start_screen);
+    set_cursor(0,1);
+    print_lcd(start_screen2);
+
+
+    while(!up_pressed){
+        ThisThread::sleep_for(100ms);
+    }
+
+    clear_screen();
+    set_cursor(7, 0);
+    print_lcd(third_string);
     while(1){
         random_num = rand() % 2;
         random_num_large = rand() % 100;
@@ -165,7 +186,7 @@ int main() {
             up_pressed = false;
             reset_loop();
             if(up_pressed == true){
-    
+                ThisThread::sleep_for(1000ms);
                 end_game = false;
                 reset();
                 score = 0;
