@@ -1,5 +1,6 @@
 #include "mbed.h"
 #include "NHD_0216HZ.h"
+#include <cstdlib>
 
 
 InterruptIn right(D2);
@@ -98,6 +99,9 @@ void reset(){
  MAIN function
  *----------------------------------------------------------------------------*/
 int main() {
+    srand(time(NULL));
+
+    int random_num = rand() % 2;
 
 
 
@@ -113,6 +117,7 @@ int main() {
     down.rise(&down_ISR);
 
     while(1){
+        random_num = rand() % 2;
 
         if(user_x == obj_x && user_y == obj_y){
             end_game = true;
@@ -189,6 +194,7 @@ int main() {
         else if(!left_pressed && !right_pressed && !up_pressed && !down_pressed){
             set_cursor((obj_x - 1), obj_y);
             print_lcd(erase);
+            obj_y = random_num;
             set_cursor(right_bound,obj_y);
             print_lcd(fourth_string);
             obj_x = right_bound;
