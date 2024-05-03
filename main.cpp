@@ -80,29 +80,31 @@ int main() {
     up.rise(&up_ISR);
     down.rise(&down_ISR);
 
-
-
-
     while(1){
         
-
-        
-        if(right_pressed == true && user_x != right_bound){
+        if(right_pressed == true && user_x < right_bound){
             set_cursor((user_x - 1), user_y);
             print_lcd(erase);
             print_lcd(third_string);
             right_pressed = false;
             user_x++;
+            set_cursor(obj_x, obj_y);
+
+        }else{
+            right_pressed = false;
         }
-        if(left_pressed == true && user_x != left_bound){
+        if(left_pressed == true && user_x > left_bound){
             set_cursor((user_x - 1), user_y);
             print_lcd(erase);
             set_cursor((user_x - 2), user_y);
             print_lcd(third_string);
             left_pressed = false;
             user_x--;
+            set_cursor(obj_x, obj_y);
+        }else{
+            left_pressed = false;
         }
-        if(up_pressed == true){
+        if(up_pressed == true && user_y > 0){
             set_cursor((user_x - 1), user_y);
             print_lcd(erase);
             set_cursor(user_x - 1, (user_y - 1));
@@ -110,8 +112,10 @@ int main() {
             up_pressed = false;
             user_y--;
             set_cursor(obj_x, obj_y);
+        }else{
+            up_pressed = false;
         }
-        if(down_pressed == true){
+        if(down_pressed == true && user_y < 1){
             set_cursor((user_x - 1), user_y);
             print_lcd(erase);
             set_cursor(user_x - 1, (user_y + 1));
@@ -121,25 +125,10 @@ int main() {
             user_y++;
 
             set_cursor(obj_x, obj_y);
-        }else if(obj_x != left_bound && !left_pressed && !right_pressed && !up_pressed && !down_pressed){
-            set_cursor((obj_x - 1),obj_y);
-            print_lcd(erase);
-            set_cursor((obj_x - 2), obj_y);
-            print_lcd(fourth_string);
-            obj_x--;
-
-            set_cursor(obj_x, obj_y);
-
+        }else{
+            down_pressed = false;
         }
-        else if(!left_pressed && !right_pressed && !up_pressed && !down_pressed){
-            set_cursor((obj_x - 1), obj_y);
-            print_lcd(erase);
-            set_cursor(right_bound,obj_y);
-            print_lcd(fourth_string);
-            obj_x = right_bound;
-            set_cursor(obj_x, obj_y);
 
-        }
 
         if(obj_x != left_bound && !left_pressed && !right_pressed && !up_pressed && !down_pressed){
             set_cursor((obj_x - 1),obj_y);
@@ -166,6 +155,3 @@ int main() {
 
     }
 }
-
-
-
