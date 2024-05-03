@@ -28,7 +28,7 @@ bool down_pressed = false;
 
     int obj_x = right_bound;
     int obj_y = 1;
-    int user_x = 0;
+    int user_x = 1;
     int user_y = 0;
     bool end_game = false;
 
@@ -77,7 +77,7 @@ void reset_loop(){
     print_lcd(start_again);
     obj_x = right_bound;
     obj_y = 1;
-    user_x = 0;
+    user_x = 1;
     user_y = 0;
 }
 
@@ -85,7 +85,7 @@ void reset(){
     clear_screen();
     obj_x = right_bound;
     obj_y = 1;
-    user_x = 0;
+    user_x = 1;
     user_y = 0;
     set_cursor(0, 0);
     print_lcd(third_string);
@@ -102,6 +102,7 @@ int main() {
     srand(time(NULL));
 
     int random_num = rand() % 2;
+    int random_speed = rand() % 500 + 10;
 
 
 
@@ -118,6 +119,8 @@ int main() {
 
     while(1){
         random_num = rand() % 2;
+        random_speed = rand() % 500 + 1;
+
 
         if(user_x == obj_x && user_y == obj_y){
             end_game = true;
@@ -131,6 +134,7 @@ int main() {
                 end_game = false;
                 reset();
             }
+
         }else{
         
         if(right_pressed == true && user_x < right_bound){
@@ -164,6 +168,7 @@ int main() {
             user_y--;
             set_cursor(obj_x, obj_y);
         }else{
+
             up_pressed = false;
         }
         if(down_pressed == true && user_y < 1){
@@ -199,13 +204,14 @@ int main() {
             print_lcd(fourth_string);
             obj_x = right_bound;
             set_cursor(obj_x, obj_y);
+            ThisThread::sleep_for(random_speed);
 
         }
 
-        ThisThread::sleep_for(100ms);
+        ThisThread::sleep_for(50ms);
 
         }
-                ThisThread::sleep_for(100ms);
+                ThisThread::sleep_for(50ms);
 
     }
 }
