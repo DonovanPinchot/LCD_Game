@@ -38,7 +38,7 @@ bool down_pressed = false;
 
     int obj_x = right_bound;
     int obj_y = 1;
-    int user_x = 1;
+    int user_x = 8;
     int user_y = 0;
     bool end_game = false;
     int swap_side_obj = 0;
@@ -88,7 +88,7 @@ void reset_loop(){
     print_lcd(start_again);
     obj_x = right_bound;
     obj_y = 1;
-    user_x = 1;
+    user_x = 8;
     user_y = 0;
 }
 
@@ -96,9 +96,9 @@ void reset(){
     clear_screen();
     obj_x = right_bound;
     obj_y = 1;
-    user_x = 1;
+    user_x = 8;
     user_y = 0;
-    set_cursor(0, 0);
+    set_cursor(7, 0);
     print_lcd(third_string);
 }
 
@@ -121,8 +121,8 @@ int main() {
     init_spi();
     init_lcd();
     init_lcd();
-    set_cursor(0, 0);
-    print_lcd(third_string);
+    //set_cursor(7, 0);
+    //print_lcd(third_string);
     right.rise(&right_ISR);
     left.rise(&left_ISR);
     up.rise(&up_ISR);
@@ -170,7 +170,7 @@ int main() {
         }else{
             left_pressed = false;
         }
-        if(up_pressed == true && user_y > 0){
+        if(up_pressed == true && user_y == 1 && !end_game){
             set_cursor((user_x - 1), user_y);
             print_lcd(erase);
             set_cursor(user_x - 1, (user_y - 1));
