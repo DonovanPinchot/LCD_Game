@@ -3,6 +3,15 @@
 #include "NHD_0216HZ.h"
 #include <cstdlib>
 
+//Polish left/right side projectile spawning
+//Add scoring system
+//Add start screen
+//Clean up code
+//
+//Redesign circuit
+//Make Presentation
+//Final Report
+
 
 InterruptIn right(D2);
 InterruptIn left(D3);
@@ -239,7 +248,7 @@ int main() {
             obj_y = random_num;
             swap_side_obj = rand() % 2; 
             if(swap_side_obj == 0){
-                set_cursor(left_bound,obj_y);
+                set_cursor(left_bound - 1,obj_y);
                 print_lcd(fourth_string);
                 obj_x = left_bound;
                 set_cursor(obj_x, obj_y);
