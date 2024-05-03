@@ -2,7 +2,7 @@
 #include "NHD_0216HZ.h"
 
 
-InterruptIn right(PA_10);
+InterruptIn right(D2);
 InterruptIn left(D3);
 InterruptIn up(D4);
 InterruptIn down(D5);
@@ -12,6 +12,24 @@ bool right_pressed = false;
 bool left_pressed = false;
 bool up_pressed = false;
 bool down_pressed = false;
+
+    const char *first_string = "Hello";
+    const char *second_string = "World";
+    const char *third_string = "O";
+    const char *fourth_string = "W";
+    const char *game_over = "   Game Over  ";
+    const char *start_again = "Up to Reset";
+    const char *erase = " ";
+    const int left_bound = 1;
+    const int right_bound = 16;
+    const int up_bound = 0;
+    const int low_bound = 1;
+
+    int obj_x = right_bound;
+    int obj_y = 1;
+    int user_x = 0;
+    int user_y = 0;
+    bool end_game = false;
 
 
 
@@ -41,8 +59,36 @@ void down_ISR()
     down_pressed = true;
 }
 
+void clear_screen(){
+    const char *blank_line = "                ";
+    set_cursor(0, 0);
+    print_lcd(blank_line);
+    set_cursor(0,1);
+    print_lcd(blank_line);
+}
 
+//Reset Game
+void reset_loop(){
+    clear_screen();
+    set_cursor(0, 0);
+    print_lcd(game_over);
+    set_cursor(0, 1);
+    print_lcd(start_again);
+    obj_x = right_bound;
+    obj_y = 1;
+    user_x = 0;
+    user_y = 0;
+}
 
+void reset(){
+    clear_screen();
+    obj_x = right_bound;
+    obj_y = 1;
+    user_x = 0;
+    user_y = 0;
+    set_cursor(0, 0);
+    print_lcd(third_string);
+}
 
 
 
@@ -51,23 +97,9 @@ void down_ISR()
 /*----------------------------------------------------------------------------
  MAIN function
  *----------------------------------------------------------------------------*/
-    const char *first_string = "Hello";
-    const char *second_string = "World";
-    const char *third_string = "O";
-    const char *fourth_string = "W";
-    const char *erase = " ";
-    const int left_bound = 1;
-    const int right_bound = 16;
-    const int up_bound = 0;
-    const int low_bound = 1;
-
-
 int main() {
 
-    int obj_x = right_bound;
-    int obj_y = 1;
-    int user_x = 0;
-    int user_y = 0;
+
 
 
     init_spi();
@@ -81,6 +113,20 @@ int main() {
     down.rise(&down_ISR);
 
     while(1){
+
+        if(user_x == obj_x && user_y == obj_y){
+            end_game = true;
+        }
+
+        if(end_game == true){
+            up_pressed = false;
+            reset_loop();
+            if(up_pressed == true){
+    
+                end_game = false;
+                reset();
+            }
+        }else{
         
         if(right_pressed == true && user_x < right_bound){
             set_cursor((user_x - 1), user_y);
@@ -152,6 +198,8 @@ int main() {
 
         ThisThread::sleep_for(100ms);
 
+        }
+                ThisThread::sleep_for(100ms);
 
     }
 }
