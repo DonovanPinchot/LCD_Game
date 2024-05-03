@@ -54,6 +54,7 @@ void down_ISR()
     const char *first_string = "Hello";
     const char *second_string = "World";
     const char *third_string = "O";
+    const char *fourth_string = "W";
     const char *erase = " ";
     const int left_bound = 1;
     const int right_bound = 16;
@@ -62,18 +63,9 @@ void down_ISR()
 
 
 int main() {
-  /*
-    Intialise the SPI and the LCD
-    Print the first string
-    Set the cursor to (0,1)
-    Print the second string
-  */
 
-
-
-
-    int x = 0;
-    int y = 0;
+    int obj_x = right_bound;
+    int obj_y = 1;
     int user_x = 0;
     int user_y = 0;
 
@@ -92,11 +84,12 @@ int main() {
 
 
     while(1){
+        
 
+        
         if(right_pressed == true && user_x != right_bound){
             set_cursor((user_x - 1), user_y);
             print_lcd(erase);
-            //ThisThread::sleep_for(100);
             print_lcd(third_string);
             right_pressed = false;
             user_x++;
@@ -105,31 +98,70 @@ int main() {
             set_cursor((user_x - 1), user_y);
             print_lcd(erase);
             set_cursor((user_x - 2), user_y);
-            //ThisThread::sleep_for(100);
             print_lcd(third_string);
             left_pressed = false;
             user_x--;
         }
-        if(up_pressed == true && user_y != up_bound){
+        if(up_pressed == true){
             set_cursor((user_x - 1), user_y);
             print_lcd(erase);
             set_cursor(user_x - 1, (user_y - 1));
-            //ThisThread::sleep_for(100);
             print_lcd(third_string);
             up_pressed = false;
             user_y--;
+            set_cursor(obj_x, obj_y);
         }
-        if(down_pressed == true && user_y != low_bound){
+        if(down_pressed == true){
             set_cursor((user_x - 1), user_y);
             print_lcd(erase);
             set_cursor(user_x - 1, (user_y + 1));
-            //ThisThread::sleep_for(100);
             print_lcd(third_string);
+            
             down_pressed = false;
             user_y++;
+
+            set_cursor(obj_x, obj_y);
+        }else if(obj_x != left_bound && !left_pressed && !right_pressed && !up_pressed && !down_pressed){
+            set_cursor((obj_x - 1),obj_y);
+            print_lcd(erase);
+            set_cursor((obj_x - 2), obj_y);
+            print_lcd(fourth_string);
+            obj_x--;
+
+            set_cursor(obj_x, obj_y);
+
+        }
+        else if(!left_pressed && !right_pressed && !up_pressed && !down_pressed){
+            set_cursor((obj_x - 1), obj_y);
+            print_lcd(erase);
+            set_cursor(right_bound,obj_y);
+            print_lcd(fourth_string);
+            obj_x = right_bound;
+            set_cursor(obj_x, obj_y);
+
         }
 
-        ThisThread::sleep_for(1ms);
+        if(obj_x != left_bound && !left_pressed && !right_pressed && !up_pressed && !down_pressed){
+            set_cursor((obj_x - 1),obj_y);
+            print_lcd(erase);
+            set_cursor((obj_x - 2), obj_y);
+            print_lcd(fourth_string);
+            obj_x--;
+
+            set_cursor(obj_x, obj_y);
+
+        }
+        else if(!left_pressed && !right_pressed && !up_pressed && !down_pressed){
+            set_cursor((obj_x - 1), obj_y);
+            print_lcd(erase);
+            set_cursor(right_bound,obj_y);
+            print_lcd(fourth_string);
+            obj_x = right_bound;
+            set_cursor(obj_x, obj_y);
+
+        }
+
+        ThisThread::sleep_for(100ms);
 
 
     }
