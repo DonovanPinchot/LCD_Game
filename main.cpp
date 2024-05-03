@@ -28,6 +28,7 @@ bool down_pressed = false;
     const char *second_string = "World";
     const char *third_string = "O";
     const char *fourth_string = "W";
+    const char *coin = "o";
     const char *game_over = "   Game Over  ";
     const char *start_again = "Up to Reset";
     const char *erase = " ";
@@ -40,8 +41,12 @@ bool down_pressed = false;
     int obj_y = 1;
     int user_x = 8;
     int user_y = 0;
+    int coin_x = 5;
+    int coin_y = 0;
     bool end_game = false;
     int swap_side_obj = 0;
+
+    int score = 0;
 
 
 
@@ -81,13 +86,20 @@ void clear_screen(){
 
 //Reset Game
 void reset_loop(){
+    char buffer[20];
+    int len = snprintf(buffer, sizeof(buffer), "%d", score);
+
     clear_screen();
     set_cursor(0, 0);
     print_lcd(game_over);
     set_cursor(0, 1);
-    print_lcd(start_again);
+    print_lcd(buffer);
     obj_x = right_bound;
     obj_y = 1;
+
+    coin_x = 5;
+    coin_y = 0;
+
     user_x = 8;
     user_y = 0;
 }
@@ -96,10 +108,19 @@ void reset(){
     clear_screen();
     obj_x = right_bound;
     obj_y = 1;
+
+    coin_x = 5;
+    coin_y = 0;
+    
     user_x = 8;
     user_y = 0;
+
+    score = 0;
     set_cursor(7, 0);
     print_lcd(third_string);
+
+    set_cursor(coin_x - 1, coin_y);
+    print_lcd(coin);
 }
 
 
@@ -113,16 +134,17 @@ int main() {
     srand(time(NULL));
 
     int random_num = rand() % 2;
+    int random_num_large = rand() % 100;
     int random_speed = rand() % 500 + 10;
-
+    int random_location = rand() % 10 + 5;
 
 
 
     init_spi();
     init_lcd();
     init_lcd();
-    //set_cursor(7, 0);
-    //print_lcd(third_string);
+    set_cursor(7, 0);
+    print_lcd(third_string);
     right.rise(&right_ISR);
     left.rise(&left_ISR);
     up.rise(&up_ISR);
@@ -130,9 +152,11 @@ int main() {
 
     while(1){
         random_num = rand() % 2;
+        random_num_large = rand() % 100;
         random_speed = rand() % 500 + 1;
+        random_location = rand() % 10 + 5;
 
-
+        //Halt game
         if(user_x == obj_x && user_y == obj_y){
             end_game = true;
         }
@@ -144,9 +168,31 @@ int main() {
     
                 end_game = false;
                 reset();
+                score = 0;
             }
 
         }else{
+        
+        
+        //Main game logic
+
+        if(coin_x == user_x && coin_y == user_y){
+
+            score++;
+            set_cursor(random_location - 1, random_num);
+            coin_x = random_location;
+            coin_y = random_num; 
+            print_lcd(coin);
+        }else{
+            set_cursor(coin_x - 1, coin_y);
+            print_lcd(coin);
+        }
+
+
+
+
+
+
         
         if(right_pressed == true && user_x < right_bound){
             set_cursor((user_x - 1), user_y);
